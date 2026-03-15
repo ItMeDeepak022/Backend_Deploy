@@ -1,6 +1,6 @@
 let express=require('express');
 const { userRouter } = require('./userRouter');
-const { loginData, RegData } = require('../controllers/adminController');
+const { loginData, RegData, userDelete } = require('../controllers/adminController');
 let adminRouter=express.Router();
 
 adminRouter.use('/user',userRouter)
@@ -12,5 +12,7 @@ adminRouter.post('/login',loginData)
 // http://localhost:8000/admin/login
 
 adminRouter.post('/registration',RegData)
+
+adminRouter.post('/delete',userDelete)
 
 module.exports={adminRouter}

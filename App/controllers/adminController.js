@@ -16,8 +16,8 @@ let loginData = async (req, res) => {
    if (checkdbEmail) {
 
       let dbpassword = checkdbEmail.password
-      let Fletter=checkdbEmail.name
-      var token = jwt.sign({ userId:checkdbEmail._id},process.env.TokenKey);
+      let Fletter = checkdbEmail.name
+      var token = jwt.sign({ userId: checkdbEmail._id }, process.env.TokenKey);
 
 
       if (bcrypt.compareSync(password, dbpassword)) {
@@ -31,7 +31,7 @@ let loginData = async (req, res) => {
       }
       else {
          res.send({
-            status:false,
+            status: false,
             message: "Invaild password.."
          })
       }
@@ -74,4 +74,27 @@ let RegData = async (req, res) => {
 }
 
 
-module.exports = { loginData, RegData }
+let userDelete = async (req, res) => {
+
+const token = req.headers.authorization.split(' ')[1]
+
+ 
+
+let decode=jwt.verify(token,process.env.TokenKey)
+
+let {userId}=decode
+
+
+
+let data = await authModel.deleteOne({_id:userId})
+
+   res.send({
+      status: true,
+      message: "Account Deleted Successfully",
+      data
+       
+
+   })
+}
+
+module.exports = { loginData, RegData ,userDelete }
