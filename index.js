@@ -16,6 +16,10 @@ App.use(cors())
  // http://localhost:8000/admin
 
 App.use('/admin',adminRouter)
+
+App.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
  
 // DB + Connections 
 
