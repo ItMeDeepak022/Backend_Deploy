@@ -2,6 +2,8 @@ const { config } = require("dotenv")
 let express = require("express")
 let mongoose=require('mongoose')
 let App=express()
+
+// To allow acces object from frontend 
 App.use(express.json())
 
 // To manages the ports of frontend and backend....
@@ -25,6 +27,7 @@ App.get("/", (req, res) => {
 
 //  for local server to connet mongodb
 //  mongodb://127.0.0.1:27017/${process.env.DBName}
+
 
  mongoose.connect(process.env.DbUrl)
  .then(()=>{

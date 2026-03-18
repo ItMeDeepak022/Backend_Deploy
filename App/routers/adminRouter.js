@@ -1,6 +1,6 @@
 let express=require('express');
 const { userRouter } = require('./userRouter');
-const { loginData, RegData, userDelete } = require('../controllers/adminController');
+const { loginData, RegData, userDelete, sendOtp, changePass, varifyOtp } = require('../controllers/adminController');
 let adminRouter=express.Router();
 
 adminRouter.use('/user',userRouter)
@@ -14,5 +14,11 @@ adminRouter.post('/login',loginData)
 adminRouter.post('/registration',RegData)
 
 adminRouter.post('/delete',userDelete)
+
+adminRouter.post('/send-otp',sendOtp)
+
+adminRouter.post('/varify-otp',varifyOtp)
+
+adminRouter.post('/change-password',changePass)
 
 module.exports={adminRouter}
