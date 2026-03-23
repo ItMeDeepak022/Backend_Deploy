@@ -58,92 +58,49 @@ let loginData = async (req, res) => {
 
 
 
-// let RegData = async (req, res) => {
-
-//    try {
-//       let { name, email, password } = req.body
-//       let existingUser = await authModel.findOne({email })
-//       console.log(existingUser);
-//       if (existingUser) {
-//          return  res.send({
-//             status: false,
-//             message: "Email already exists"
-//          });
-//       }
-
-//       const hash = bcrypt.hashSync(password, 10);
-
-//       let obj = {
-//          name,
-//          email,
-//          password: hash
-//       }
-
-
-//       let ResObj = await authModel.create(obj)
-
-//       res.send({
-//          status: true,
-//          message: "resigtration successfully",
-//          //   ResObj
-
-//       })
-//    } catch (error) {
-//       console.log("❌ Registration Error:", error.message);
-//       res.send({
-//          status: false,
-//          message: "Registration failed: " + error.message
-//       })
-//    }
-// }
 let RegData = async (req, res) => {
+
    try {
-      let { name, email, password } = req.body;
-
-      // 👉 check email exists
-      let existingUser = await authModel.findOne({ email });
-
+      let { name, email, password } = req.body
+      let existingUser = await authModel.findOne({ email })
+       
       if (existingUser) {
-         return res.status(400).send({
+         res.send({
             status: false,
-            message: " Email already exists, please login"
+            message: "Email already exists"
          });
       }
 
-      // 👉 hash password
-      const hash = bcrypt.hashSync(password, 10);
+      else {
+         const hash = bcrypt.hashSync(password, 10);
 
-      // 👉 create user
-      let user = await authModel.create({
-         name,
-         email,
-         password: hash
-      });
+         let obj = {
+            name,
+            email,
+            password: hash
+         }
 
-      return res.status(201).send({
-         status: true,
-         message: "Registration successfully",
-         user
-      });
+
+         let ResObj = await authModel.create(obj)
+
+         res.send({
+            status: true,
+            message: "resigtration successfully",
+            //   ResObj
+
+         })
+      }
+
 
    } catch (error) {
-
-      // 👉 handle duplicate key error (IMPORTANT)
-      if (error.code === 11000) {
-         return res.status(400).send({
-            status: false,
-            message: " Email already exists"
-         });
-      }
-
-      console.log("Registration Error:", error.message);
-
-      return res.status(500).send({
+      console.log("❌ Registration Error:", error.message);
+      res.send({
          status: false,
          message: "Registration failed: " + error.message
-      });
+      })
    }
-};
+}
+
 
 
 let userDelete = async (req, res) => {
