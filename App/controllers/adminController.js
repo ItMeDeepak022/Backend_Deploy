@@ -58,36 +58,92 @@ let loginData = async (req, res) => {
 
 
 
+// let RegData = async (req, res) => {
+
+//    try {
+//       let { name, email, password } = req.body
+//       let existingUser = await authModel.findOne({email })
+//       console.log(existingUser);
+//       if (existingUser) {
+//          return  res.send({
+//             status: false,
+//             message: "Email already exists"
+//          });
+//       }
+
+//       const hash = bcrypt.hashSync(password, 10);
+
+//       let obj = {
+//          name,
+//          email,
+//          password: hash
+//       }
+
+
+//       let ResObj = await authModel.create(obj)
+
+//       res.send({
+//          status: true,
+//          message: "resigtration successfully",
+//          //   ResObj
+
+//       })
+//    } catch (error) {
+//       console.log("❌ Registration Error:", error.message);
+//       res.send({
+//          status: false,
+//          message: "Registration failed: " + error.message
+//       })
+//    }
+// }
 let RegData = async (req, res) => {
-
    try {
-      let { name, email, password } = req.body
+      let { name, email, password } = req.body;
 
+      // 👉 check email exists
+      let existingUser = await authModel.findOne({ email });
+
+      if (existingUser) {
+         return res.status(400).send({
+            status: false,
+            message: " Email already exists, please login"
+         });
+      }
+
+      // 👉 hash password
       const hash = bcrypt.hashSync(password, 10);
 
-      let obj = {
+      // 👉 create user
+      let user = await authModel.create({
          name,
          email,
          password: hash
+      });
+
+      return res.status(201).send({
+         status: true,
+         message: " Registration successful",
+         user
+      });
+
+   } catch (error) {
+
+      // 👉 handle duplicate key error (IMPORTANT)
+      if (error.code === 11000) {
+         return res.status(400).send({
+            status: false,
+            message: " Email already exists"
+         });
       }
 
+      console.log("Registration Error:", error.message);
 
-      let ResObj = await authModel.create(obj)
-
-      res.send({
-         status: true,
-         message: "resigtration successfully",
-         //   ResObj
-
-      })
-   } catch (error) {
-      console.log("❌ Registration Error:", error.message);
-      res.send({
+      return res.status(500).send({
          status: false,
          message: "Registration failed: " + error.message
-      })
+      });
    }
-}
+};
 
 
 let userDelete = async (req, res) => {
@@ -130,11 +186,11 @@ let sendOtp = async (req, res) => {
          myOtp.set('backendOtp', otp)
          myOtp.set('email', email)
 
-        
+
 
          try {
             await transporter.sendMail({
-               from:`"Enquiry Management System" <deepakkushwaha5945@gmail.com>`,
+               from: `"Enquiry Management System" <deepakkushwaha5945@gmail.com>`,
                to: email,
                subject: "Enquiry Management System - OTP",
                html: `
@@ -251,7 +307,7 @@ let changePass = async (req, res) => {
 
    try {
       let email = myOtp.get('email')
-      let user = await authModel.findOne({email})
+      let user = await authModel.findOne({ email })
 
       // console.log(user);
 
@@ -264,7 +320,7 @@ let changePass = async (req, res) => {
             const hash = bcrypt.hashSync(newpas, 10)
 
             // 👉 update password
-            await authModel.updateOne({email },
+            await authModel.updateOne({ email },
                { $set: { password: hash } }
             )
 
@@ -284,11 +340,11 @@ let changePass = async (req, res) => {
          }
 
       }
-      else{
+      else {
          res.send({
-         status: false,
-         message: "Account doesn't Exist.."
-      })
+            status: false,
+            message: "Account doesn't Exist.."
+         })
       }
 
    } catch (error) {

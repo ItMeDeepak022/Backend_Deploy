@@ -11,6 +11,8 @@ adminRouter.use('/user',userRouter)
 adminRouter.post('/login',loginData)
 // http://localhost:8000/admin/login
 
+// http://localhost:8000/admin/registration
+
 adminRouter.post('/registration',RegData)
 
 adminRouter.post('/delete',userDelete)
