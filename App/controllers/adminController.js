@@ -122,7 +122,7 @@ let RegData = async (req, res) => {
 
       return res.status(201).send({
          status: true,
-         message: " Registration successful",
+         message: "Registration successfully",
          user
       });
 
